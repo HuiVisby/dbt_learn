@@ -1,0 +1,76 @@
+[0m00:07:57.560950 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'start', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x795433eb2810>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x795433630cb0>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x795433eb30e0>]}
+
+
+============================== 00:07:57.566104 | a4b27c6c-cbba-493c-920c-8fb782b133de ==============================
+[0m00:07:57.566104 [info ] [MainThread]: Running with dbt=1.11.6
+[0m00:07:57.567065 [debug] [MainThread]: running dbt with arguments {'printer_width': '80', 'empty': 'None', 'quiet': 'False', 'indirect_selection': 'eager', 'invocation_command': 'dbt init nordic_retail', 'send_anonymous_usage_stats': 'True', 'log_path': 'logs', 'fail_fast': 'False', 'no_print': 'None', 'target_path': 'None', 'log_cache_events': 'False', 'static_parser': 'True', 'partial_parse': 'True', 'log_format': 'default', 'version_check': 'True', 'profiles_dir': '/home/hui_yang_uu/.dbt', 'use_colors': 'True', 'use_experimental_parser': 'False', 'warn_error': 'None', 'write_json': 'True', 'cache_selected_only': 'False', 'warn_error_options': 'WarnErrorOptionsV2(error=[], warn=[], silence=[])', 'introspect': 'True', 'debug': 'False'}
+[0m00:07:57.602866 [info ] [MainThread]: Creating dbt configuration folder at /home/hui_yang_uu/.dbt
+[0m00:07:57.605308 [debug] [MainThread]: Starter project path: /home/hui_yang_uu/.local/lib/python3.12/site-packages/dbt/include/starter_project
+[0m00:07:57.608112 [info ] [MainThread]: 
+Your new dbt project "nordic_retail" was created!
+
+For more information on how to configure the profiles.yml file,
+please consult the dbt documentation here:
+
+  https://docs.getdbt.com/docs/configure-your-profile
+
+One more thing:
+
+Need help? Don't hesitate to reach out to us via GitHub issues or on Slack:
+
+  https://community.getdbt.com/
+
+Happy modeling!
+
+[0m00:07:57.608864 [info ] [MainThread]: Setting up your profile.
+[0m00:08:57.511488 [error] [MainThread]: Encountered an error:
+
+[0m00:08:57.514866 [error] [MainThread]: Traceback (most recent call last):
+  File "/home/hui_yang_uu/.local/lib/python3.12/site-packages/dbt/cli/requires.py", line 182, in wrapper
+    result, success = func(*args, **kwargs)
+                      ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/hui_yang_uu/.local/lib/python3.12/site-packages/dbt/cli/requires.py", line 128, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/hui_yang_uu/.local/lib/python3.12/site-packages/dbt/cli/main.py", line 483, in init
+    results = task.run()
+              ^^^^^^^^^^
+  File "/home/hui_yang_uu/.local/lib/python3.12/site-packages/dbt/task/init.py", line 346, in run
+    self.setup_profile(profile_name)
+  File "/home/hui_yang_uu/.local/lib/python3.12/site-packages/dbt/task/init.py", line 262, in setup_profile
+    self.create_profile_from_target(adapter, profile_name=profile_name)
+  File "/home/hui_yang_uu/.local/lib/python3.12/site-packages/dbt/task/init.py", line 179, in create_profile_from_target
+    self.create_profile_from_profile_template(profile_template, profile_name)
+  File "/home/hui_yang_uu/.local/lib/python3.12/site-packages/dbt/task/init.py", line 163, in create_profile_from_profile_template
+    target = self.generate_target_from_input(prompts, initial_target)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/hui_yang_uu/.local/lib/python3.12/site-packages/dbt/task/init.py", line 116, in generate_target_from_input
+    target = self.generate_target_from_input(
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/hui_yang_uu/.local/lib/python3.12/site-packages/dbt/task/init.py", line 129, in generate_target_from_input
+    target[key] = click.prompt(
+                  ^^^^^^^^^^^^^
+  File "/home/hui_yang_uu/.local/lib/python3.12/site-packages/click/termui.py", line 171, in prompt
+    value = prompt_func(prompt)
+            ^^^^^^^^^^^^^^^^^^^
+  File "/home/hui_yang_uu/.local/lib/python3.12/site-packages/click/termui.py", line 154, in prompt_func
+    raise Abort() from None
+click.exceptions.Abort
+
+[0m00:08:57.516092 [debug] [MainThread]: Resource report: {"command_name": "init", "command_success": false, "command_wall_clock_time": 60.03934, "process_in_blocks": "536", "process_kernel_time": 0.668932, "process_mem_max_rss": "363504", "process_out_blocks": "80", "process_user_time": 5.378622}
+[0m00:08:57.517658 [debug] [MainThread]: Command `dbt init` failed at 00:08:57.517451 after 60.04 seconds
+[0m00:08:57.518370 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'end', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x795433e68230>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x795415579ee0>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x795414d3ae40>]}
+[0m00:08:57.519036 [debug] [MainThread]: Flushing usage events
+[0m00:08:57.887937 [debug] [MainThread]: An error was encountered while trying to flush usage events
+[0m00:09:37.338477 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'start', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x79f5c04156d0>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x79f5c043e480>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x79f5c013b530>]}
+
+
+============================== 00:09:37.343868 | ea6d5d9f-4a1d-4dda-8f0f-94b362d2b4be ==============================
+[0m00:09:37.343868 [info ] [MainThread]: Running with dbt=1.11.6
+[0m00:09:37.345272 [debug] [MainThread]: running dbt with arguments {'warn_error': 'None', 'no_print': 'None', 'partial_parse': 'True', 'write_json': 'True', 'indirect_selection': 'eager', 'static_parser': 'True', 'cache_selected_only': 'False', 'printer_width': '80', 'version_check': 'True', 'quiet': 'False', 'send_anonymous_usage_stats': 'True', 'empty': 'None', 'warn_error_options': 'WarnErrorOptionsV2(error=[], warn=[], silence=[])', 'debug': 'False', 'log_path': 'logs', 'log_cache_events': 'False', 'introspect': 'True', 'profiles_dir': '/home/hui_yang_uu/.dbt', 'use_colors': 'True', 'fail_fast': 'False', 'log_format': 'default', 'use_experimental_parser': 'False', 'invocation_command': 'dbt init nordic_retail', 'target_path': 'None'}
+[0m00:09:37.357887 [info ] [MainThread]: A project called nordic_retail already exists here.
+[0m00:09:37.360087 [debug] [MainThread]: Resource report: {"command_name": "init", "command_success": true, "command_wall_clock_time": 0.108794704, "process_in_blocks": "0", "process_kernel_time": 0.189027, "process_mem_max_rss": "101696", "process_out_blocks": "8", "process_user_time": 2.145866}
+[0m00:09:37.360975 [debug] [MainThread]: Command `dbt init` succeeded at 00:09:37.360762 after 0.11 seconds
+[0m00:09:37.361577 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'end', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x79f5bfca2de0>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x79f5c04156d0>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x79f5bf558050>]}
+[0m00:09:37.362211 [debug] [MainThread]: Flushing usage events
+[0m00:09:37.745683 [debug] [MainThread]: An error was encountered while trying to flush usage events
