@@ -1,16 +1,16 @@
-  import requests
-  import pandas as pd
-  from google.cloud import bigquery
-  from datetime import datetime
+import requests
+import pandas as pd
+from google.cloud import bigquery
+from datetime import datetime
 
-  PROJECT_ID = "nordic-retail-intel-2025"
-  DATASET = "raw_ingest"
+PROJECT_ID = "nordic-retail-intel-2025"
+DATASET = "raw_ingest"
 
-  def fetch_scb_sweden():
-      print("Fetching SCB Sweden retail data...")
-      url = "https://api.scb.se/OV0104/v1/doris/en/ssd/HA/HA0101/HA0101A/HA0101AKvTab"
-      payload = {
-          "query": [
+def fetch_scb_sweden():
+    print("Fetching SCB Sweden retail data...")
+    url = "https://api.scb.se/OV0104/v1/doris/en/ssd/HA/HA0101/HA0101A/HA0101AKvTab"
+    payload = {
+        "query": [
               {"code": "SNI2007", "selection": {"filter": "item", "values": ["47"]}},
               {"code": "Tid", "selection": {"filter": "all", "values": ["*"]}}
           ],
