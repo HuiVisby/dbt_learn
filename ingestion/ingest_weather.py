@@ -14,8 +14,12 @@
       {"city": "Helsinki",   "country_code": "FI", "latitude": 60.1699, "longitude": 24.9384},
   ]
 
-  def fetch_weather(city, start_date="2014-01-01", end_date="2025-12-31"):
-      print(f"Fetching weather for {city['city']}...")
+  def fetch_weather(city, start_date="2014-01-01", end_date=None):
+      from datetime import timezone, timedelta
+      if end_date is None:
+          cet = timezone(timedelta(hours=1))
+          end_date = datetime.now(cet).strftime("%Y-%m-%d")
+      print(f"Fetching weather for {city['city']} up to {end_date}...")
       url = "https://archive-api.open-meteo.com/v1/archive"
       params = {
           "latitude": city["latitude"],
@@ -31,7 +35,7 @@
       df = pd.DataFrame(data["daily"])
       df["city"] = city["city"]
       df["country_code"] = city["country_code"]
-      df["ingested_at"] = datetime.utcnow().isoformat()
+      df["ingested_at"] = datetime.now(timezone(timedelta(hours=1))).isoformat()
       df = df.rename(columns={"time": "date"})
       print(f"  {city['city']}: {len(df)} days")
       return df
