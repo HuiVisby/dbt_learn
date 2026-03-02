@@ -1,21 +1,15 @@
-import requests
-import pandas as pd
-from google.cloud import bigquery
-from datetime import datetime
+  import requests
+  import pandas as pd
+  from google.cloud import bigquery
+  from datetime import datetime
 
-PROJECT_ID = "nordic-retail-intel-2025"
-DATASET = "raw_ingest"
+  PROJECT_ID = "nordic-retail-intel-2025"
+  DATASET = "raw_ingest"
 
-def fetch_scb_sweden():
-    print("Fetching SCB Sweden retail data...")
-    url = "https://api.scb.se/OV0104/v1/doris/en/ssd/HA/HA0101/HA0101A/HA0101AKvTab"
-    payload = {
-        "query": [
-              {"code": "SNI2007", "selection": {"filter": "item", "values": ["47"]}},
-              {"code": "Tid", "selection": {"filter": "all", "values": ["*"]}}
-          ],
-          "response": {"format": "json"}
-      }
+  def fetch_scb_sweden():
+      print("Fetching SCB Sweden retail data...")
+      url = "https://api.scb.se/OV0104/v1/doris/en/ssd/HA/HA0101/HA0101A/HA0101AKvTab"
+      payload = {"query": [{"code": "SNI2007", "selection": {"filter": "item", "values": ["47"]}}, {"code": "Tid", "selection": {"filter": "all", "values": ["*"]}}], "response": {"format": "json"}}
       r = requests.post(url, json=payload, timeout=30)
       data = r.json()
       rows = []
@@ -31,13 +25,7 @@ def fetch_scb_sweden():
   def fetch_ssb_norway():
       print("Fetching SSB Norway retail data...")
       url = "https://data.ssb.no/api/v0/en/table/07132"
-      payload = {
-          "query": [
-              {"code": "Varegruppe", "selection": {"filter": "item", "values": ["00"]}},
-              {"code": "Tid", "selection": {"filter": "all", "values": ["*"]}}
-          ],
-          "response": {"format": "json-stat2"}
-      }
+      payload = {"query": [{"code": "Varegruppe", "selection": {"filter": "item", "values": ["00"]}}, {"code": "Tid", "selection": {"filter": "all", "values": ["*"]}}], "response": {"format": "json-stat2"}}
       r = requests.post(url, json=payload, timeout=30)
       data = r.json()
       periods = list(data["dimension"]["Tid"]["category"]["index"].keys())
@@ -52,14 +40,7 @@ def fetch_scb_sweden():
   def fetch_dst_denmark():
       print("Fetching DST Denmark retail data...")
       url = "https://api.statbank.dk/v1/data"
-      payload = {
-          "table": "DETDF",
-          "format": "JSONSTAT",
-          "variables": [
-              {"code": "BRANCHE", "values": ["TOT"]},
-              {"code": "Tid", "values": ["*"]}
-          ]
-      }
+      payload = {"table": "DETDF", "format": "JSONSTAT", "variables": [{"code": "BRANCHE", "values": ["TOT"]}, {"code": "Tid","values": ["*"]}]}
       r = requests.post(url, json=payload, timeout=30)
       data = r.json()
       dataset = data.get("dataset", data)
