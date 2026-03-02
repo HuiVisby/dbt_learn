@@ -3,29 +3,29 @@
 # and underscores. A good package name should reflect your organization's
 # name or the intended use of these models
 name: 'nordic_retail'
- version: '1.0.0'
- config-version: 2
+version: '1.0.0'
+config-version: 2
 
- profile: 'nordic_retail'
+profile: 'nordic_retail'
 
- model-paths: ["models"]
- seed-paths: ["seeds"]
- test-paths: ["tests"]
- macro-paths: ["macros"]
- snapshot-paths: ["snapshots"]
+model-paths: ["models"]
+seed-paths: ["seeds"]
+test-paths: ["tests"]
+macro-paths: ["macros"]
+snapshot-paths: ["snapshots"]
 
- target-path: "target"
- clean-targets: ["target", "dbt_packages"]
+target-path: "target"
+clean-targets: ["target", "dbt_packages"]
+
 
 models:
-    nordic_retail:
-      staging:
-        +schema: dbt_staging
-        +materialized: view
-      intermediate:
-        +schema: dbt_intermediate
-        +materialized: view
-     marts:
-        +schema: dbt_marts
-        +materialized: table
-
+  nordic_retail:
+    staging:
+      +schema: staging
+      +materialized: view
+    intermediate:
+      +schema: intermediate
+      +materialized: view
+    marts:
+      +schema: marts
+      +materialized: table

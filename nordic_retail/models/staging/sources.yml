@@ -1,0 +1,10 @@
+version: 2
+
+sources:
+  - name: raw_ingest
+    database: nordic-retail-intel-2025
+    schema: raw_ingest
+    tables:
+      - name: eurostat_retail_trade
+      - name: eurostat_ecommerce
+      - name: eurostat_consumer_confidence
