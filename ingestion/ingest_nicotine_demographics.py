@@ -6,8 +6,10 @@ from datetime import datetime, timezone
 PROJECT_ID = "nordic-retail-intel-2025"
 DATASET = "raw_ingest"
 
-FHM_URL = "https://fohm-app.folkhalsomyndigheten.se/Folkhalsodata/api/v1/sv/A_Folkhalsodata/A_Folkhalsodata__B_HLV__aLevvanor__aagL
-evvanortobak/"
+FHM_URL = (
+  "https://fohm-app.folkhalsomyndigheten.se/Folkhalsodata/api/v1/sv/"
+  "A_Folkhalsodata/A_Folkhalsodata__B_HLV__aLevvanor__aagLevvanortobak/"
+)
 
 
 def fetch_fhm_sweden_demographics():
