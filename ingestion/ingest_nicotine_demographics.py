@@ -8,15 +8,16 @@ DATASET = "raw_ingest"
 
 
 def fetch_ssb_norway_snus_demographics():
-    """Fetch daily snus users by sex and age group from SSB Norway. Table 05307."""
+    """Fetch daily snus users by sex and age from SSB Norway. Table 07692: 2004-2025."""
     print("Fetching SSB Norway snus demographics...")
-    url = "https://data.ssb.no/api/v0/en/table/05307"
+    url = "https://data.ssb.no/api/v0/en/table/07692"
     payload = {
         "query": [
-            {"code": "Kjonn", "selection": {"filter": "item", "values": ["1", "2"]}},
-            {"code": "Alder", "selection": {"filter": "item", "values": ["16-24", "25-34", "35-44", "45-54", "55-66", "67-79"]}},
-            {"code": "ContentsCode", "selection": {"filter": "item", "values": ["Snus"]}},
-            {"code": "Tid", "selection": {"filter": "all", "values": ["*"]}}
+            {"code": "Kjonn",        "selection": {"filter": "item", "values": ["1", "2"]}},
+            {"code": "Alder",        "selection": {"filter": "item", "values": ["16-24", "25-34", "35-44", "45-54", "55-64",
+"65-79"]}},
+            {"code": "ContentsCode", "selection": {"filter": "item", "values": ["DagSnus"]}},
+            {"code": "Tid",          "selection": {"filter": "all", "values": ["*"]}}
         ],
         "response": {"format": "json-stat2"}
     }
@@ -25,27 +26,27 @@ def fetch_ssb_norway_snus_demographics():
     data = r.json()
 
     dims = data["dimension"]
-    genders = list(dims["Kjonn"]["category"]["label"].items())
-    ages = list(dims["Alder"]["category"]["label"].items())
-    years = list(dims["Tid"]["category"]["index"].keys())
-    values = data["value"]
+    genders = list(dims["Kjonn"]["category"]["label"].items())    # [("1","Males"),("2","Females")]
+    ages    = list(dims["Alder"]["category"]["label"].items())
+    years   = list(dims["Tid"]["category"]["index"].keys())
+    values  = data["value"]
 
     rows = []
     idx = 0
     for g_code, g_label in genders:
-        for a_code, a_label in ages:
+        for a_code, _ in ages:
             for year in years:
                 val = values[idx]
                 if val is not None:
                     rows.append({
                         "country_code": "NO",
-                        "year": int(year),
-                        "age_group": a_code,
-                        "gender": "male" if g_code == "1" else "female",
-                        "product": "snus",
-                        "pct_users": float(val),
-                        "source": "SSB",
-                        "ingested_at": datetime.now(timezone.utc).isoformat()
+                        "year":         int(year),
+                        "age_group":    a_code,
+                        "gender":       "male" if g_code == "1" else "female",
+                        "product":      "snus",
+                        "pct_users":    float(val),
+                        "source":       "SSB",
+                        "ingested_at":  datetime.now(timezone.utc).isoformat()
                     })
                 idx += 1
 
