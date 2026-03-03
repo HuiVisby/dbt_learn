@@ -95,9 +95,9 @@ def fetch_dst_denmark():
 
 
 def fetch_statfin_finland():
-    """Fetch retail trade index from Statistics Finland (StatFin)."""
+    """Fetch retail trade index from Statistics Finland (StatFin). klv table: 1995-present."""
     print("Fetching StatFin Finland retail data...")
-    url = "https://pxdata.stat.fi/PXWeb/api/v1/en/StatFin/vkm/statfin_vkm_pxt_11c8.px"
+    url = "https://pxdata.stat.fi/PXWeb/api/v1/en/StatFin/klv/statfin_klv_pxt_14kr.px"
     meta = requests.get(url, timeout=30).json()
     variables = meta.get("variables", [])
     query = []
