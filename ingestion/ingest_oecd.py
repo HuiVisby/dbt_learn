@@ -11,13 +11,13 @@ DATASET = "raw_ingest"
 def fetch_oecd_norway_confidence():
     """Fetch Norway consumer confidence from OECD MEI dataset (CSCICP03, monthly)."""
     print("Fetching OECD Norway consumer confidence...")
-    url = "https://sdmx.oecd.org/public/rest/data/OECD,DF_MEI,/NOR.CSCICP03.IXOBSA.M"
-    headers = {"Accept": "application/vnd.sdmx.data+json;version=2"}
-    params = {"startPeriod": "2014-01", "endPeriod": "2025-12"}
-    r = requests.get(url, headers=headers, params=params, timeout=60)
+    url = "https://stats.oecd.org/sdmx-json/data/MEI/NOR.CSCICP03.IXOBSA.M/all"
+    params = {"startTime": "2014-01", "endTime": "2025-12"}
+    r = requests.get(url, params=params, timeout=120)
+    r.raise_for_status()
     data = r.json()
-    time_periods = data["data"]["structures"][0]["dimensions"]["observation"][0]["values"]
-    observations = data["data"]["dataSets"][0]["series"]["0:0:0:0"]["observations"]
+    time_periods = data["structure"]["dimensions"]["observation"][0]["values"]
+    observations = data["dataSets"][0]["series"]["0:0:0:0"]["observations"]
     rows = []
     for idx, period_info in enumerate(time_periods):
         obs = observations.get(str(idx))
