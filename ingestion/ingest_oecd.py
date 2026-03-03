@@ -16,10 +16,21 @@ def fetch_oecd_norway_confidence():
     r = requests.get(url, params=params, timeout=120)
     r.raise_for_status()
     data = r.json()
-    print(f"Top-level keys: {list(data.keys())}")
-    print(f"Sample: {str(data)[:500]}")
-    time_periods = data["structure"]["dimensions"]["observation"][0]["values"]
-    observations = data["dataSets"][0]["series"]["0:0:0:0"]["observations"]
+    structures = data["data"]["structures"][0]
+    time_periods = structures["dimensions"]["observation"][0]["values"]
+    observations = data["data"]["dataSets"][0]["series"]["0:0:0:0"]["observations"]
+    rows = []
+    for idx, period_info in enumerate(time_periods):
+        obs = observations.get(str(idx))
+        if obs and obs[0] is not None:
+            rows.append({
+                "country_code": "NO",
+                "period": period_info["id"],
+                "confidence_value": float(obs[0]),
+                "ingested_at": datetime.now(timezone.utc).isoformat()
+            })
+    print(f"OECD Norway confidence: {len(rows)} rows")
+    return pd.DataFrame(rows)
 
 def load_to_bigquery(df, table_name):
     client = bigquery.Client(project=PROJECT_ID)
