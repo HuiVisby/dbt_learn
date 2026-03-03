@@ -98,20 +98,17 @@ def fetch_statfin_finland():
     """Fetch retail trade index from Statistics Finland (StatFin). klv table: 1995-present."""
     print("Fetching StatFin Finland retail data...")
     url = "https://pxdata.stat.fi/PXWeb/api/v1/en/StatFin/klv/statfin_klv_pxt_14kr.px"
-    meta = requests.get(url, timeout=30).json()
-    variables = meta.get("variables", [])
-    query = []
-    for var in variables:
-        query.append({
-            "code": var["code"],
-            "selection": {"filter": "all", "values": ["*"]}
-        })
-    payload = {"query": query, "response": {"format": "json-stat2"}}
+    payload = {
+        "query": [
+            {"code": "Toimiala", "selection": {"filter": "item", "values": ["G47"]}},
+            {"code": "Muuttuja", "selection": {"filter": "item", "values": ["mi"]}},
+            {"code": "Tiedot", "selection": {"filter": "item", "values": ["alkuperainen"]}}
+        ],
+        "response": {"format": "json-stat2"}
+    }
     r = requests.post(url, json=payload, timeout=60)
     data = r.json()
-    periods = list(data["dimension"].get(
-        list(data["dimension"].keys())[-1], {}
-    ).get("category", {}).get("index", {}).keys())
+    periods = list(data["dimension"]["Kuukausi"]["category"]["index"].keys())
     values = data.get("value", [])
     rows = []
     for period, value in zip(periods, values):
