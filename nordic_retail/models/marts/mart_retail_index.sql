@@ -19,23 +19,29 @@ national as (
     from {{ ref('stg_national_stats__retail_trade') }}
     where year >= 2014
 ),
-combined as (
-    select * from national
-    union all
-    select
-        e.country_code,
-        e.period,
-        e.year,
-        e.month,
-        e.retail_index,
-        e.data_source
-    from eurostat e
-    where not exists (
-        select 1 from national n
-        where n.country_code = e.country_code
-          and n.period = e.period
+combined as (select
+          country_code,
+          period,
+          year,
+          month,
+          retail_index,
+          data_source
+      from national
+      union all
+      select
+          e.country_code,
+          e.period,
+          e.year,
+          e.month,
+          e.retail_index,
+          e.data_source
+      from eurostat e
+      where not exists (
+          select 1 from national n
+          where n.country_code = e.country_code
+            and n.period = e.period
     )
-),
+    ,
 final as (
     select
         country_code,
