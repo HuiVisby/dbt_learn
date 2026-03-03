@@ -37,12 +37,13 @@ def fetch_scb_sweden():
 
 
 def fetch_ssb_norway():
-    """Fetch retail trade index from Statistics Norway (SSB)."""
+    """Fetch retail trade index from Statistics Norway (SSB). Table 07129: 2000-present."""
     print("Fetching SSB Norway retail data...")
-    url = "https://data.ssb.no/api/v0/en/table/07132"
+    url = "https://data.ssb.no/api/v0/en/table/07129"
     payload = {
         "query": [
-            {"code": "Varegruppe", "selection": {"filter": "item", "values": ["00"]}},
+            {"code": "NACE", "selection": {"filter": "item", "values": ["47"]}},
+            {"code": "ContentsCode", "selection": {"filter": "item", "values": ["VolumUjustert"]}},
             {"code": "Tid", "selection": {"filter": "all", "values": ["*"]}}
         ],
         "response": {"format": "json-stat2"}
@@ -65,14 +66,14 @@ def fetch_ssb_norway():
 
 
 def fetch_dst_denmark():
-    """Fetch retail trade index from Statistics Denmark (DST)."""
+    """Fetch retail trade index from Statistics Denmark (DST). Table DETA151: 2000-present."""
     print("Fetching DST Denmark retail data...")
     url = "https://api.statbank.dk/v1/data"
     payload = {
-        "table": "DETDF",
+        "table": "DETA151",
         "format": "JSONSTAT",
         "variables": [
-            {"code": "BRANCHE", "values": ["TOT"]},
+            {"code": "BRANCHE07", "values": ["4700"]},
             {"code": "Tid", "values": ["*"]}
         ]
     }
