@@ -8,30 +8,29 @@ DATASET = "raw_ingest"
 
 
 def fetch_scb_sweden():
-    """Fetch retail trade index from Statistics Sweden (SCB)."""
+    """Fetch retail trade index from Statistics Sweden (SCB). TAB3948 v2 API: 2023-present."""
     print("Fetching SCB Sweden retail data...")
-    url = "https://api.scb.se/OV0104/v1/doris/en/ssd/HA/HA0101/HA0101A/HA0101AKvTab"
-    payload = {
-        "query": [
-            {"code": "SNI2007", "selection": {"filter": "item", "values": ["47"]}},
-            {"code": "Tid", "selection": {"filter": "all", "values": ["*"]}}
-        ],
-        "response": {"format": "json"}
+    url = "https://statistikdatabasen.scb.se/api/v2/tables/TAB3948/data"
+    params = {
+        "lang": "en",
+        "valueCodes[SNI2007]": "47",
+        "valueCodes[ContentsCode]": "000006VV",
+        "valueCodes[Tid]": "*",
+        "outputFormat": "json-stat2"
     }
-    r = requests.post(url, json=payload, timeout=30)
+    r = requests.get(url, params=params, timeout=30)
     data = r.json()
+    periods = list(data["dimension"]["Tid"]["category"]["index"].keys())
+    values = data["value"]
     rows = []
-    for item in data["data"]:
-        period = item["key"][1].replace("M", "-")
-        try:
+    for period, value in zip(periods, values):
+        if value is not None:
             rows.append({
                 "country_code": "SE",
                 "period": period,
-                "index_value": float(item["values"][0]),
+                "index_value": float(value),
                 "source": "SCB"
             })
-        except (ValueError, TypeError):
-            continue
     print(f"SCB: {len(rows)} rows")
     return pd.DataFrame(rows)
 
@@ -98,14 +97,7 @@ def fetch_dst_denmark():
 def fetch_statfin_finland():
     """Fetch retail trade index from Statistics Finland (StatFin)."""
     print("Fetching StatFin Finland retail data...")
-    base = "https://statfin.stat.fi/PXWeb/api/v1/en/StatFin/kau/vkm/"
-    r = requests.get(base, timeout=30)
-    tables = r.json()
-    table_id = tables[0]["id"] if tables else None
-    if not table_id:
-        print("StatFin: no table found")
-        return pd.DataFrame()
-    url = base + table_id
+    url = "https://pxdata.stat.fi/PXWeb/api/v1/en/StatFin/vkm/statfin_vkm_pxt_11c8.px"
     meta = requests.get(url, timeout=30).json()
     variables = meta.get("variables", [])
     query = []
