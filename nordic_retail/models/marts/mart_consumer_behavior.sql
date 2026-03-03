@@ -12,7 +12,7 @@
       select
           country_code,
           year,
-          max(pct_value) as ecommerce_pct
+          max(ecommerce_pct) as ecommerce_pct
       from {{ ref('stg_eurostat__ecommerce') }}
       group by country_code, year
   ),
