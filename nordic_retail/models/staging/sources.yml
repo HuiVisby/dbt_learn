@@ -14,3 +14,4 @@ sources:
       - name: google_trends_top_terms
       - name: google_trends_rising_terms
       - name: folkhalsomyndigheten_nicotine
+      - name: ssb_nicotine_demographics_no
