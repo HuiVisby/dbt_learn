@@ -1,5 +1,4 @@
 version: 2
-
 sources:
   - name: raw_ingest
     database: nordic-retail-intel-2025
@@ -8,3 +7,10 @@ sources:
       - name: eurostat_retail_trade
       - name: eurostat_ecommerce
       - name: eurostat_consumer_confidence
+      - name: eurostat_individuals_buying_online
+      - name: eurostat_online_purchase_frequency
+      - name: national_stats_retail_trade
+      - name: weather_daily
+      - name: google_trends_top_terms
+      - name: google_trends_rising_terms
+      - name: folkhalsomyndigheten_nicotine
