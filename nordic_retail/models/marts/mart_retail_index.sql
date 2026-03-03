@@ -22,7 +22,14 @@ national as (
 combined as (
     select * from national
     union all
-    select e.* from eurostat e
+    select
+        e.country_code,
+        e.period,
+        e.year,
+        e.month,
+        e.retail_index,
+        e.data_source
+    from eurostat e
     where not exists (
         select 1 from national n
         where n.country_code = e.country_code
