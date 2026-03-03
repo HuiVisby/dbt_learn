@@ -3,34 +3,36 @@ import pandas as pd
 from google.cloud import bigquery
 from datetime import datetime
 
+
 PROJECT_ID = "nordic-retail-intel-2025"
 DATASET = "raw_ingest"
 
 
 def fetch_scb_sweden():
-    """Fetch retail trade index from Statistics Sweden (SCB). TAB3948 v2 API: 2023-present."""
+    """Fetch retail trade index from Statistics Sweden (SCB)."""
     print("Fetching SCB Sweden retail data...")
-    url = "https://statistikdatabasen.scb.se/api/v2/tables/TAB3948/data"
-    params = {
-        "lang": "en",
-        "valueCodes[SNI2007]": "47",
-        "valueCodes[ContentsCode]": "000006VV",
-        "valueCodes[Tid]": "*",
-        "outputFormat": "json-stat2"
+    url = "https://api.scb.se/OV0104/v1/doris/en/ssd/HA/HA0101/HA0101A/HA0101AKvTab"
+    payload = {
+        "query": [
+            {"code": "SNI2007", "selection": {"filter": "item", "values": ["47"]}},
+            {"code": "Tid", "selection": {"filter": "all", "values": ["*"]}}
+        ],
+        "response": {"format": "json"}
     }
-    r = requests.get(url, params=params, timeout=30)
+    r = requests.post(url, json=payload, timeout=30)
     data = r.json()
-    periods = list(data["dimension"]["Tid"]["category"]["index"].keys())
-    values = data["value"]
     rows = []
-    for period, value in zip(periods, values):
-        if value is not None:
+    for item in data["data"]:
+        period = item["key"][1].replace("M", "-")
+        try:
             rows.append({
                 "country_code": "SE",
                 "period": period,
-                "index_value": float(value),
+                "index_value": float(item["values"][0]),
                 "source": "SCB"
             })
+        except (ValueError, TypeError):
+            continue
     print(f"SCB: {len(rows)} rows")
     return pd.DataFrame(rows)
 
@@ -65,14 +67,15 @@ def fetch_ssb_norway():
 
 
 def fetch_dst_denmark():
-    """Fetch retail trade index from Statistics Denmark (DST). Table DETA151: 2000-present."""
+    """Fetch retail trade index from Statistics Denmark (DST). Table DETA212A: 2015-present."""
     print("Fetching DST Denmark retail data...")
     url = "https://api.statbank.dk/v1/data"
     payload = {
-        "table": "DETA151",
+        "table": "DETA212A",
         "format": "JSONSTAT",
         "variables": [
-            {"code": "BRANCHE07", "values": ["4700"]},
+            {"code": "BRANCHEDB25UDVALG", "values": ["G47"]},
+            {"code": "INDEKSTYPE", "values": ["MAENGDE"]},
             {"code": "Tid", "values": ["*"]}
         ]
     }
@@ -95,20 +98,27 @@ def fetch_dst_denmark():
 
 
 def fetch_statfin_finland():
-    """Fetch retail trade index from Statistics Finland (StatFin). klv table: 1995-present."""
+    """Fetch retail trade index from Statistics Finland (StatFin). Table 14kr: 2010-present."""
     print("Fetching StatFin Finland retail data...")
     url = "https://pxdata.stat.fi/PXWeb/api/v1/en/StatFin/klv/statfin_klv_pxt_14kr.px"
-    payload = {
-        "query": [
-            {"code": "Toimiala", "selection": {"filter": "item", "values": ["G47"]}},
-            {"code": "Muuttuja", "selection": {"filter": "item", "values": ["mi"]}},
-            {"code": "Tiedot", "selection": {"filter": "item", "values": ["alkuperainen"]}}
-        ],
-        "response": {"format": "json-stat2"}
-    }
+    meta = requests.get(url, timeout=30).json()
+    variables = meta.get("variables", [])
+    query = []
+    for var in variables:
+        if var["code"] == "Toimiala":
+            query.append({"code": "Toimiala", "selection": {"filter": "item", "values": ["G47"]}})
+        elif var["code"] == "Muuttuja":
+            query.append({"code": "Muuttuja", "selection": {"filter": "item", "values": ["mi"]}})
+        elif var["code"] == "Tiedot":
+            query.append({"code": "Tiedot", "selection": {"filter": "item", "values": ["alkuperainen"]}})
+        else:
+            query.append({"code": var["code"], "selection": {"filter": "all", "values": ["*"]}})
+    payload = {"query": query, "response": {"format": "json-stat2"}}
     r = requests.post(url, json=payload, timeout=60)
     data = r.json()
-    periods = list(data["dimension"]["Kuukausi"]["category"]["index"].keys())
+    periods = list(data["dimension"].get(
+        list(data["dimension"].keys())[-1], {}
+    ).get("category", {}).get("index", {}).keys())
     values = data.get("value", [])
     rows = []
     for period, value in zip(periods, values):
