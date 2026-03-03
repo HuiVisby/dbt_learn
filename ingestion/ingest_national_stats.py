@@ -10,7 +10,7 @@ CET = timezone(timedelta(hours=1))
 def fetch_scb_sweden():
   print("Fetching SCB Sweden retail data (1991-present)...")
   url = "https://api.scb.se/OV0104/v1/doris/en/ssd/HA/HA0101/HA0101B/DetOms07N"
-  payload = {"query": [{"code": "SNI2007", "selection": {"filter": "item", "values": ["47"]}}, {"code": "Tid", "selection": {"filter": "all", "values": ["*"]}}], "response": {"format": "json"}}
+  payload = {"query": [{"code": "SNI2007", "selection": {"filter": "item", "values": ["47"]}}, {"code": "Tid", "selection": {"filter": "from", "values": ["1991M01"]}}], "response": {"format": "json"}}
   r = requests.post(url, json=payload, timeout=30)
   data = r.json()
   rows = []
