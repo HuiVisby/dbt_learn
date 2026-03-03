@@ -41,6 +41,7 @@ combined as (select
           where n.country_code = e.country_code
             and n.period = e.period
     )
+    )
     ,
 final as (
     select
