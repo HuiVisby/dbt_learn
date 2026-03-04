@@ -8,49 +8,52 @@ DATASET = "raw_ingest"
 COUNTRIES = ["SE", "NO", "DK", "FI"]
 
 
-def fetch_individuals_buying_online():
-   """
-   Eurostat isoc_ec_ibuy - I_BLT12: % individuals who ordered online in last 12 months.
-   ind_type=IND_TOTAL, unit=PC_IND.
-   """
-   print("Fetching individual online buying behavior (isoc_ec_ibuy / I_BLT12)...")
-   url = "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/isoc_ec_ibuy"
-   params = {
-       "format": "JSON",
-       "lang": "EN",
-       "geo": COUNTRIES,
-       "indic_is": "I_BLT12",
-       "ind_type": "IND_TOTAL",
-       "unit": "PC_IND"
-   }
-   r = requests.get(url, params=params, timeout=60)
-   r.raise_for_status()
-   data = r.json()
+  def fetch_individuals_buying_online():
+      """
+      Combines isoc_ec_ibuy (2004-2019) + isoc_ec_ib20 (2020-2025)
+      Indicator I_BLT12: % individuals who ordered online in last 12 months.
+      """
+      print("Fetching individual online buying behavior...")
+      params = {
+          "format": "JSON",
+          "lang": "EN",
+          "geo": COUNTRIES,
+          "indic_is": "I_BLT12",
+          "ind_type": "IND_TOTAL",
+          "unit": "PC_IND"
+      }
 
-   time_periods = list(data["dimension"]["time"]["category"]["index"].keys())
-   geo_index    = data["dimension"]["geo"]["category"]["index"]
-   values       = data["value"]
-   n_times      = len(time_periods)
+      all_rows = []
+      for dataset in ["isoc_ec_ibuy", "isoc_ec_ib20"]:
+          url = f"https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/{dataset}"
+          r = requests.get(url, params=params, timeout=60)
+          r.raise_for_status()
+          data = r.json()
 
-   rows = []
-   for geo_code, geo_idx in geo_index.items():
-       if geo_code not in COUNTRIES:
-           continue
-       for t_idx, period in enumerate(time_periods):
-           val = values.get(str(geo_idx * n_times + t_idx))
-           if val is not None:
-               rows.append({
-                   "country_code": geo_code,
-                   "period":       int(period),
-                   "indic_is":     "I_BLT12",
-                   "ind_type":     "IND_TOTAL",
-                   "unit":         "PC_IND",
-                   "pct_value":    float(val),
-                   "ingested_at":  datetime.utcnow().isoformat()
-               })
+          time_periods = list(data["dimension"]["time"]["category"]["index"].keys())
+          geo_index    = data["dimension"]["geo"]["category"]["index"]
+          values       = data["value"]
+          n_times      = len(time_periods)
 
-   print(f"Individuals buying online: {len(rows)} rows")
-   return pd.DataFrame(rows)
+          for geo_code, geo_idx in geo_index.items():
+              if geo_code not in COUNTRIES:
+                  continue
+              for t_idx, period in enumerate(time_periods):
+                  val = values.get(str(geo_idx * n_times + t_idx))
+                  if val is not None:
+                      all_rows.append({
+                          "country_code": geo_code,
+                          "period":       int(period),
+                          "indic_is":     "I_BLT12",
+                          "ind_type":     "IND_TOTAL",
+                          "unit":         "PC_IND",
+                          "pct_value":    float(val),
+                          "ingested_at":  datetime.utcnow().isoformat()
+                      })
+          print(f"  {dataset}: {len(all_rows)} rows so far")
+
+      print(f"Individuals buying online: {len(all_rows)} rows total")
+      return pd.DataFrame(all_rows)
 
 
 def fetch_consumer_confidence():
