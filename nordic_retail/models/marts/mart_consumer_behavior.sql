@@ -1,4 +1,13 @@
-  with confidence as (
+  with ecommerce as (
+      select
+          country_code,
+          year,
+          avg(ecommerce_pct) as ecommerce_pct
+      from {{ ref('stg_eurostat__individuals_buying_online') }}
+      group by country_code, year
+  ),
+
+  confidence as (
       select
           country_code,
           year,
@@ -9,33 +18,24 @@
       where year >= 2014
   ),
 
-  ecommerce as (
-      select
-          country_code,
-          year,
-          avg(ecommerce_pct) as ecommerce_pct
-      from {{ ref('stg_eurostat__individuals_buying_online') }}
-      group by country_code, year
-  ),
-
   final as (
       select
-          c.country_code,
-          case c.country_code
+          e.country_code,
+          case e.country_code
               when 'SE' then 'Sweden'
               when 'NO' then 'Norway'
               when 'DK' then 'Denmark'
               when 'FI' then 'Finland'
           end                 as country_name,
-          c.year,
+          e.year,
           c.month,
           c.period,
           c.confidence_value,
           e.ecommerce_pct
-      from confidence c
-      left join ecommerce e
-          on c.country_code = e.country_code
-          and c.year        = e.year
+      from ecommerce e
+      left join confidence c
+          on e.country_code = c.country_code
+          and e.year        = c.year
   )
 
   select * from final
