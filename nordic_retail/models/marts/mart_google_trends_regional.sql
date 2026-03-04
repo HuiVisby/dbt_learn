@@ -1,4 +1,4 @@
- {{
+  {{
       config(materialized='table')
   }}
 
@@ -13,8 +13,8 @@
       region,
       keyword,
       case keyword
-          when 'snus'  then 'Snus'
+          when 'snus'   then 'Snus'
           when 'nuuska' then 'Snus'
       end                         as product_category,
-      regional_interest
+      search_interest
   from {{ ref('stg_google_trends_nicotine_by_region') }}
