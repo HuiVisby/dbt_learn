@@ -26,7 +26,7 @@ def fetch_trends_over_time():
         try:
             pytrends.build_payload(
                 keywords,
-                timeframe="2019-01-01 2025-12-31",
+                timeframe="2025-01-01 2025-12-31",
                 geo=country
             )
             df = pytrends.interest_over_time()
@@ -73,7 +73,7 @@ def fetch_trends_by_region():
             try:
                 pytrends.build_payload(
                     [keyword],
-                    timeframe="2019-01-01 2025-12-31",
+                    timeframe="2025-01-01 2025-12-31",
                     geo=country
                 )
                 df = pytrends.interest_by_region(resolution="REGION", inc_low_vol=True)
