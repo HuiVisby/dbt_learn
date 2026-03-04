@@ -1,3 +1,7 @@
+  {{
+      config(materialized='table')
+  }}
+
   select
       country_code,
       case country_code
