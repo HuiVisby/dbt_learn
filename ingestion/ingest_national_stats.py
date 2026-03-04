@@ -176,5 +176,5 @@ def main():
         load_to_bigquery(df_all, "national_stats_retail_trade")
 
 
-if __name__ == "__main__":
-main()
+    if __name__ == "__main__":
+    main()
