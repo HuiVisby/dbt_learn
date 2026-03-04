@@ -20,7 +20,7 @@
       select
           country_code,
           year,
-          avg(pct_value) as avg_online_buying_pct
+          avg(confidence_value) as avg_online_buying_pct
       from {{ ref('stg_eurostat__individuals_buying_online') }}
       group by country_code, year
   ),
