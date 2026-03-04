@@ -15,13 +15,19 @@
       month,
       week_of_year,
       keyword,
+
       case keyword
           when 'snus'             then 'Snus'
+          when 'nuuska'           then 'Snus'
           when 'nikotinpåsar'     then 'Nicotine Pouches'
           when 'nikotinposer'     then 'Nicotine Pouches'
           when 'nikotiinipussit'  then 'Nicotine Pouches'
-          when 'nuuska'           then 'Snus'
-          when 'ZYN'              then 'ZYN'
+          when 'ZYN'              then 'Nicotine Pouches'
       end                         as product_category,
+
+      case keyword
+          when 'ZYN' then 'ZYN Brand'
+          else 'Category Search'
+      end                         as search_type,
       search_interest
   from {{ ref('stg_google_trends_nicotine_weekly') }}
