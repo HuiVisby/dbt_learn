@@ -1,13 +1,13 @@
 def fetch_trends_by_region():
-    """Search interest by sub-region within each country for snus and ZYN — geo diff."""
+    """Search interest by sub-region within each country for snus, nicotine pouches and ZYN."""
     pytrends = TrendReq(hl="en-US", tz=60)
     all_rows = []
 
     terms_by_country = {
-        "SE": ["snus", "ZYN"],
-        "NO": ["snus", "ZYN"],
-        "DK": ["snus", "ZYN"],
-        "FI": ["nuuska", "ZYN"],
+        "SE": ["snus", "nikotinpåsar", "ZYN"],
+        "NO": ["snus", "nikotinposer", "ZYN"],
+        "DK": ["snus", "nikotinposer", "ZYN"],
+        "FI": ["nuuska", "nikotiinipussit", "ZYN"],
     }
 
     for country, keywords in terms_by_country.items():
@@ -39,4 +39,3 @@ def fetch_trends_by_region():
     result = pd.concat(all_rows, ignore_index=True)
     result["ingested_at"] = datetime.utcnow().isoformat()
     return result
-
